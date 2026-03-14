@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Movies</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="browse-page">
+
+<div class="browse-container">
+
+  <h1>Browse Movies</h1>
+  <p>Explore our movie collection</p>
+
+  <!-- FILTER BOX -->
+  <div class="filter-box">
+
+    <input type="text" id="searchInput" placeholder="Search by title...">
+
+    <div class="filters">
+      <select id="genreFilter">
+        <option value="">All Genres</option>
+        <option>Action</option>
+        <option>Comedy</option>
+        <option>Drama</option>
+        <option>Sci-Fi</option>
+        <option>Adventure</option>
+        <option>Romance</option>
+      </select>
+
+      <select id="sortFilter">
+        <option value="rating">Highest Rating</option>
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+      </select>
+    </div>
+
+  </div>
+
+  <p class="showing">Movies loaded from database</p>
+
+  <!-- MOVIE CARDS (DYNAMIC) -->
+  <div class="movie-grid" id="movieGrid">
+    <!-- Movies will load here dynamically -->
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

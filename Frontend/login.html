@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - MovieRec</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* LOGIN PAGE */
+
+.login-page{
+  background:#f3f3f5;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-container{
+  text-align:center;
+}
+
+.login-icon{
+  font-size:30px;
+  background:red;
+  color:white;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:auto;
+}
+
+.login-form{
+  background:white;
+  padding:30px;
+  margin-top:20px;
+  border-radius:10px;
+  width:380px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-form input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+
+.signin-btn{
+  width:100%;
+  padding:12px;
+  background:red;
+  color:white;
+  border:none;
+  border-radius:8px;
+  margin-top:10px;
+  cursor:pointer;
+}
+
+.demo-box{
+  background:#eef3ff;
+  padding:12px;
+  margin-top:15px;
+  border-radius:8px;
+  font-size:14px;
+  text-align:left;
+}
+
+.signup-link{
+  margin-top:15px;
+}
+
+.signup-link a{
+  color:red;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body class="login-page">
+
+<section class="login-container">
+
+  <div class="login-icon">➡️</div>
+
+  <h1>Welcome Back</h1>
+  <p>Sign in to your account to continue</p>
+
+  <form class="login-form">
+
+    <input type="email" placeholder="Email Address">
+    <input type="password" placeholder="Password">
+
+    
+    <a href="index.html">
+      <button type="button" class="signin-btn">Sign In</button>
+    </a>
+
+    <div class="demo-box">
+      <p><b>Demo Credentials:</b></p>
+      <p>User: john@example.com / password123</p>
+      <p>Admin: admin@moviesys.com / admin123</p>
+    </div>
+
+    <p class="signup-link">
+      Don't have an account?
+      <a href="signup.html">Sign up here</a>
+    </p>
+
+  </form>
+
+</section>
+
+</body>
+</html>

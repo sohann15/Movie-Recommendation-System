@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Browse Movies</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body class="browse-page">
+
+<div class="browse-container">
+
+  <h1>Browse Movies</h1>
+  <p>Explore thousands of movies</p>
+
+
+  <!-- SEARCH + FILTERS -->
+
+  <div class="filter-box">
+
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search movies..."
+    >
+
+    <div class="filters">
+
+      <select id="genreFilter">
+
+        <option value="">All Genres</option>
+
+        <option value="28">Action</option>
+        <option value="35">Comedy</option>
+        <option value="18">Drama</option>
+        <option value="878">Sci-Fi</option>
+        <option value="12">Adventure</option>
+        <option value="10749">Romance</option>
+
+      </select>
+
+
+      <select id="sortFilter">
+
+        <option value="popularity.desc">Most Popular</option>
+        <option value="vote_average.desc">Highest Rating</option>
+        <option value="primary_release_date.desc">Newest</option>
+        <option value="primary_release_date.asc">Oldest</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <p class="showing" id="movieCount">
+    Loading movies...
+  </p>
+
+
+  <!-- MOVIE GRID -->
+
+  <div class="movie-grid" id="movieGrid">
+
+  </div>
+
+
+  <!-- LOADING INDICATOR -->
+
+  <div id="loadingSpinner" class="loading">
+    Loading more movies...
+  </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

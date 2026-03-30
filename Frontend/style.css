@@ -2,10 +2,11 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
-/* NAVBAR */
+/* ---------------- NAVBAR ---------------- */
+
 .navbar{
   display:flex;
   justify-content:space-between;
@@ -30,6 +31,11 @@
   cursor:pointer;
 }
 
+.nav-links a{
+  color:white;
+  text-decoration:none;
+}
+
 .nav-links .active{
   background:red;
   padding:8px 16px;
@@ -42,6 +48,7 @@
   border:none;
   border-radius:8px;
   cursor:pointer;
+  transition:0.3s;
 }
 
 .login{
@@ -54,7 +61,12 @@
   color:white;
 }
 
-/* HERO SECTION */
+.auth-buttons button:hover{
+  transform:scale(1.05);
+}
+
+/* ---------------- HERO ---------------- */
+
 .hero{
   height:500px;
   display:flex;
@@ -90,6 +102,7 @@
   border-radius:10px;
   font-size:18px;
   cursor:pointer;
+  transition:0.3s;
 }
 
 .primary-btn{
@@ -102,7 +115,12 @@
   color:white;
 }
 
-/* WHY SECTION */
+.hero-buttons button:hover{
+  transform:scale(1.08);
+}
+
+/* ---------------- WHY ---------------- */
+
 .why{
   padding:80px;
   text-align:center;
@@ -113,7 +131,7 @@
   font-size:45px;
 }
 
-/* SIGNUP PAGE */
+/* ---------------- SIGNUP ---------------- */
 
 .signup-page{
   background:#f3f3f5;
@@ -171,11 +189,13 @@
   background:white;
   border-radius:8px;
   cursor:pointer;
+  transition:0.3s;
 }
 
 .genres button:hover{
   background:red;
   color:white;
+  transform:scale(1.05);
 }
 
 .create-btn{
@@ -188,20 +208,15 @@
   font-size:16px;
 }
 
-.nav-links a{
-  color:white;
-  text-decoration:none;
-}
-
-/* BROWSE PAGE */
+/* ---------------- BROWSE PAGE ---------------- */
 
 .browse-page{
-  background:#f4f4f6;
-  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
 }
 
 .browse-container{
-  width:70%;
+  width:75%;
   margin:40px auto;
 }
 
@@ -209,19 +224,24 @@
   font-size:40px;
 }
 
+/* 🔥 GLASS FILTER BOX */
 .filter-box{
-  background:white;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
   padding:20px;
   margin-top:20px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(0,0,0,0.4);
 }
 
 .filter-box input{
   width:100%;
   padding:12px;
-  border:1px solid #ccc;
-  border-radius:8px;
+  border:none;
+  border-radius:10px;
+  background:#1a1a1a;
+  color:white;
+  outline:none;
 }
 
 .filters{
@@ -233,62 +253,121 @@
 .filters select{
   flex:1;
   padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
+  border-radius:10px;
+  border:none;
+  background:#1a1a1a;
+  color:white;
 }
 
 .showing{
   margin:20px 0;
+  color:#aaa;
 }
+
+/* ---------------- MOVIE GRID ---------------- */
 
 .movie-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
   gap:20px;
 }
 
+/* 🔥 MOVIE CARD UPGRADE */
+
 .movie-card{
-  background:white;
-  border-radius:10px;
+  background:#1a1a1a;
+  border-radius:15px;
   overflow:hidden;
-  box-shadow:0 0 8px rgba(0,0,0,0.1);
+  position:relative;
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
+  cursor:pointer;
 }
+
+.movie-card:hover{
+  transform:translateY(-10px) scale(1.03);
+  box-shadow:0 15px 30px rgba(0,0,0,0.6);
+}
+
+/* IMAGE */
 
 .movie-card img{
   width:100%;
-  height:200px;
-  object-fit:cover;
+  height:auto;
+  object-fit:contain;
+  background:#000; /* fills empty space */
 }
 
-.movie-card h3{
+.movie-card:hover img{
+  transform:scale(1.1);
+}
+
+/* GRADIENT OVERLAY */
+
+.movie-card::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:50%; /* reduce coverage */
+
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.5) 0%,
+    rgba(0,0,0,0.2) 40%,
+    transparent 100%
+  );
+}
+
+/* MOVIE INFO */
+
+.movie-info{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  z-index:2;
+
+  background: rgba(0,0,0,0.1);  /* VERY LIGHT */
+  backdrop-filter: blur(1.5px);   /* glass effect */
   padding:10px;
+  border-radius:10px;
+
+  width: fit-content;           /* 🔥 KEY LINE */
+  max-width: 90%;
 }
 
-.movie-card p{
-  padding:0 10px 15px;
-  color:#666;
+.movie-info h3{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:6px;
+  color:#fff;
+  line-height:1.2;
+  text-shadow:0 2px 6px rgba(0,0,0,0.9);
 }
 
-.movie-info {
-  padding: 10px;
+.movie-info .year{
+  font-size:14px;
+  font-weight:500;
+  color:#ddd;
+  margin-bottom:4px;
 }
 
-.movie-info h3 {
-  font-size: 16px;
-  margin: 5px 0;
+/* 🎭 GENRE (smaller) */
+.movie-info .genre{
+  font-size:13px;
+  color:#bbb;
+  margin-bottom:6px;
 }
 
-.movie-info .year {
-  font-size: 13px;
-  color: #777;
+/* ⭐ RATING (highlighted) */
+.movie-info .rating{
+  font-size:14px;
+  font-weight:600;
+  color:#ffd700;
 }
+/* SMOOTH SCROLL */
 
-.movie-info .genre {
-  font-size: 13px;
-  color: #555;
-}
-
-.movie-info .rating {
-  font-weight: bold;
-  margin-top: 5px;
+html{
+  scroll-behavior:smooth;
 }

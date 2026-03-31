@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - MovieRec</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* GLOBAL */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 🔥 BACKGROUND GRID */
+
+.bg-movie-grid{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-auto-rows:180px;
+
+  z-index:-3;
+  overflow:hidden;
+}
+
+/* 🔥 POSTERS (BALANCED VISIBILITY) */
+
+.bg-movie-grid img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+
+  opacity:0.45;
+  filter: brightness(0.7) contrast(1.05) saturate(0.95);
+}
+
+/* 🔥 DARK OVERLAY */
+
+.bg-overlay{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.7)
+  );
+
+  z-index:-2;
+}
+
+/* PAGE */
+
+.signup-page{
+  background:#0a0a0a;
+  color:white;
+  min-height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding-top:80px;
+}
+
+/* NAVBAR */
+
+.signup-navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:20px 50px;
+
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(10px);
+
+  z-index:100;
+}
+
+.signup-logo{
+  font-size:22px;
+  font-weight:700;
+  color:#d7cb20;
+}
+
+.home-btn{
+  padding:8px 18px;
+  background:#d7cb20;
+  color:black;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.home-btn:hover{
+  background:#f5e663;
+  transform:scale(1.05);
+}
+
+/* CONTAINER */
+
+.signup-container{
+  width:420px;
+  padding:40px;
+
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(18px);
+
+  border-radius:20px;
+  box-shadow:0 0 40px rgba(0,0,0,0.7);
+
+  text-align:center;
+}
+
+/* TITLE */
+
+.signup-container h1{
+  font-size:32px;
+  font-weight:700;
+}
+
+.signup-container p{
+  color:#aaa;
+  margin:10px 0 20px;
+}
+
+/* INPUTS */
+
+.signup-form input{
+  width:100%;
+  padding:15px;
+  margin:10px 0;
+
+  background:#1a1a1a;
+  border-radius:12px;
+  border:1px solid transparent;
+
+  color:white;
+  font-size:14px;
+
+  outline:none;
+  transition:0.3s;
+}
+
+.signup-form input:focus{
+  border:1px solid #d7cb20;
+  background:#111;
+}
+
+/* GENRES */
+
+.genres{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin:15px 0;
+}
+
+/* DEFAULT BUTTON */
+
+.genre-btn{
+  padding:8px 14px;
+  border-radius:20px;
+  border:1px solid #444;
+  background:#1a1a1a;
+  color:#ccc;
+  cursor:pointer;
+  font-size:13px;
+  transition:0.25s;
+}
+
+/* HOVER EFFECT */
+
+.genre-btn:hover{
+  border-color:#d7cb20;
+  color:#fff;
+}
+
+/* ✅ SELECTED (FIXED TO YELLOW) */
+
+.genre-btn.selected{
+  background:#d7cb20;
+  color:black;
+  border:none;
+  box-shadow:0 0 10px rgba(215,203,32,0.4);
+}
+
+/* BUTTON */
+
+.signup-btn{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+
+  background:#d7cb20;
+  color:black;
+
+  border:none;
+  border-radius:12px;
+
+  font-size:16px;
+  font-weight:600;
+
+  cursor:pointer;
+  transition:0.3s;
+
+  box-shadow:0 0 15px rgba(215,203,32,0.3);
+}
+
+.signup-btn:hover{
+  background:#f5e663;
+  transform:scale(1.05);
+}
+
+/* LOGIN LINK */
+
+.login-link{
+  margin-top:20px;
+  font-size:14px;
+}
+
+.login-link a{
+  color:#d7cb20;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.login-link a:hover{
+  text-decoration:underline;
+}
+
+</style>
+</head>
+
+<body class="signup-page">
+
+<!-- 🔥 BACKGROUND -->
+<div class="bg-movie-grid" id="bgGrid"></div>
+<div class="bg-overlay"></div>
+
+<!-- NAVBAR -->
+<nav class="signup-navbar">
+  <div class="signup-logo">🎬 MovieRec</div>
+  <a href="index.html" class="home-btn">Home</a>
+</nav>
+
+<!-- FORM -->
+<section class="signup-container">
+
+  <h1>Create Account</h1>
+  <p>Join and get personalized recommendations</p>
+
+  <form class="signup-form" onsubmit="handleSignup(event)">
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+    <h3>Select Your Favorite Genres</h3>
+
+    <div class="genres">
+      <div class="genre-btn">Action</div>
+      <div class="genre-btn">Adventure</div>
+      <div class="genre-btn">Animation</div>
+      <div class="genre-btn">Comedy</div>
+      <div class="genre-btn">Crime</div>
+      <div class="genre-btn">Drama</div>
+      <div class="genre-btn">Family</div>
+      <div class="genre-btn">Horror</div>
+      <div class="genre-btn">Mystery</div>
+      <div class="genre-btn">Romance</div>
+      <div class="genre-btn">Sci-Fi</div>
+      <div class="genre-btn">Thriller</div>
+    </div>
+
+    <button type="submit" class="signup-btn">Create Account</button>
+
+  </form>
+
+  <p class="login-link">
+    <a href="login.html">Already have an account? Login</a>
+  </p>
+
+</section>
+
+<script>
+
+/* GENRE SELECT */
+document.querySelectorAll(".genre-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    btn.classList.toggle("selected");
+  });
+});
+
+/* SIGNUP */
+async function handleSignup(e){
+  e.preventDefault();
+
+  const password = password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if(password !== confirmPassword){
+    alert("Passwords do not match");
+    return;
+  }
+
+  const genres = [];
+  document.querySelectorAll(".genre-btn.selected").forEach(btn=>{
+    genres.push(btn.innerText);
+  });
+
+  if(genres.length < 2){
+    alert("Select at least 2 genres");
+    return;
+  }
+
+  alert("Signup logic working!");
+}
+
+/* 🔥 BACKGROUND MOVIES */
+
+async function loadBackgroundMovies(){
+  let allMovies=[];
+
+  for(let i=1;i<=5;i++){
+    const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=71cdad227e0b3d8a7797836bf5411a75&page=${i}`);
+    const data = await res.json();
+    allMovies=[...allMovies,...data.results];
+  }
+
+  allMovies.sort(()=>Math.random()-0.5);
+
+  const grid=document.getElementById("bgGrid");
+
+  allMovies.forEach(movie=>{
+    if(!movie.poster_path) return;
+
+    const img=document.createElement("img");
+    img.src="https://image.tmdb.org/t/p/w500"+movie.poster_path;
+    grid.appendChild(img);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadBackgroundMovies);
+
+</script>
+
+</body>
+</html>

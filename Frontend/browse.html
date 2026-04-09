@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Browse Movies</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<style>
+
+  /* NAVBAR */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 50px;
+  background:#000;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  color:#d7cb20;
+  font-size:22px;
+  font-weight:700;
+}
+
+.nav-links a{
+  color:white;
+  text-decoration:none;
+  margin-left:30px;
+  font-weight:500;
+  transition:0.2s;
+}
+
+/* remove purple visited */
+.nav-links a:visited{
+  color:white;
+}
+
+.nav-links a:hover{
+  color:#d7cb20;
+}
+
+.browse-container{
+  margin-top:20px;
+}
+</style>
+
+<body class="browse-page">
+
+  <!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">MovieRec</div>
+  <div class="nav-links">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="index.html">Home</a>
+   
+  </div>
+</div>
+
+<div class="browse-container">
+
+  <h1>Browse Movies</h1>
+  <p>Explore thousands of movies</p>
+
+
+  <!-- SEARCH + FILTERS -->
+
+  <div class="filter-box">
+
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search movies..."
+    >
+
+    <div class="filters">
+
+      <select id="genreFilter">
+
+        <option value="">All Genres</option>
+
+        <option value="28">Action</option>
+        <option value="35">Comedy</option>
+        <option value="18">Drama</option>
+        <option value="878">Sci-Fi</option>
+        <option value="12">Adventure</option>
+        <option value="10749">Romance</option>
+
+      </select>
+
+
+      <select id="sortFilter">
+
+        <option value="popularity.desc">Most Popular</option>
+        <option value="vote_average.desc">Highest Rating</option>
+        <option value="primary_release_date.desc">Newest</option>
+        <option value="primary_release_date.asc">Oldest</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <p class="showing" id="movieCount">
+    Loading movies...
+  </p>
+
+
+  <!-- MOVIE GRID -->
+
+  <div class="movie-grid" id="movieGrid">
+
+  </div>
+
+
+  <!-- LOADING INDICATOR -->
+
+  <div id="loadingSpinner" class="loading">
+    Loading more movies...
+  </div>
+
+</div>
+
+
+<script src="script.js" defer></script>
+
+</body>
+
+</html>

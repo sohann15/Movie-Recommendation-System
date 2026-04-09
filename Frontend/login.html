@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - MovieRec</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+.bg-movie-grid{position:fixed;top:0;left:0;width:100%;height:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));grid-auto-rows:180px;z-index:-3;overflow:hidden;}
+.bg-movie-grid img{width:100%;height:100%;object-fit:cover;opacity:0.45;filter:brightness(0.7) contrast(1.05) saturate(0.95);}
+.bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.45),rgba(0,0,0,0.7));z-index:-2;}
+.login-page{background:#0a0a0a;color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;padding-top:80px;}
+.login-navbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:100;}
+.login-logo{font-size:22px;font-weight:700;color:#d7cb20;}
+.home-btn{padding:8px 18px;background:#d7cb20;color:black;border-radius:8px;text-decoration:none;font-weight:600;transition:0.3s;}
+.home-btn:hover{background:#f5e663;transform:scale(1.05);}
+.login-container{width:400px;padding:40px;background:rgba(255,255,255,0.05);backdrop-filter:blur(18px);border-radius:20px;box-shadow:0 0 40px rgba(0,0,0,0.7);text-align:center;}
+.login-container h1{font-size:32px;font-weight:700;}
+.login-container p{color:#aaa;margin:10px 0 20px;}
+.login-form input{width:100%;padding:16px;margin:12px 0;background:#1a1a1a;border:1px solid transparent;border-radius:12px;color:white;font-size:15px;outline:none;transition:0.3s;}
+.login-form input:focus{border:1px solid #d7cb20;background:#111;}
+.login-btn{width:100%;padding:14px;margin-top:20px;background:#d7cb20;color:black;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;box-shadow:0 0 15px rgba(215,203,32,0.3);}
+.login-btn:hover{background:#f5e663;transform:scale(1.05);}
+.demo-box{margin-top:20px;padding:15px;background:rgba(255,255,255,0.05);border-radius:12px;font-size:14px;color:#aaa;}
+.signup-link{margin-top:20px;font-size:14px;}
+.signup-link a{color:#d7cb20;text-decoration:none;font-weight:600;}
+.signup-link a:hover{text-decoration:underline;}
+</style>
+</head>
+
+<body class="login-page">
+
+<div class="bg-movie-grid" id="bgGrid"></div>
+<div class="bg-overlay"></div>
+
+<nav class="login-navbar">
+  <div class="login-logo">🎬 MovieRec</div>
+  <a href="index.html" class="home-btn">Home</a>
+</nav>
+
+<section class="login-container">
+
+  <h1>Welcome Back</h1>
+  <p>Sign in to your account</p>
+
+  <form class="login-form" onsubmit="handleLogin(event)">
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <button type="submit" class="login-btn">Sign In</button>
+  </form>
+
+  <div class="demo-box">
+    <p><b>Demo:</b></p>
+    <p>john@example.com / password123</p>
+  </div>
+
+  <p class="signup-link">
+    <a href="signup.html">Create account</a>
+  </p>
+
+</section>
+
+<script>
+
+  
+async function handleLogin(e){
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try{
+    const res = await fetch("http://localhost:3000/api/auth/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+
+      // 🔥 THIS WAS MISSING (MAIN FIX)
+      localStorage.setItem("user", JSON.stringify(data));
+
+      alert("Login successful!");
+
+      window.location.href = "index.html";
+
+    }else{
+      alert(data.message || "Login failed");
+    }
+
+  }catch(err){
+    alert("Server error");
+  }
+}
+
+
+/* BACKGROUND MOVIES */
+async function loadBackgroundMovies(){
+  try{
+    let allMovies = [];
+
+    for(let i=1;i<=5;i++){
+      const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=71cdad227e0b3d8a7797836bf5411a75&page=${i}`);
+      const data = await res.json();
+      allMovies = [...allMovies, ...data.results];
+    }
+
+    allMovies.sort(()=>Math.random()-0.5);
+
+    const grid = document.getElementById("bgGrid");
+
+    allMovies.forEach(movie=>{
+      if(!movie.poster_path) return;
+
+      const img=document.createElement("img");
+      img.src="https://image.tmdb.org/t/p/w500"+movie.poster_path;
+
+      grid.appendChild(img);
+    });
+
+  }catch(err){
+    console.log(err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadBackgroundMovies);
+
+</script>
+
+</body>
+</html>

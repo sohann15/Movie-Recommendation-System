@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recommendations</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+.container{
+  padding:40px;
+}
+
+#info{
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+.empty{
+  text-align:center;
+  margin-top:50px;
+  color:#aaa;
+}
+
+/* NAVBAR FIX */
+.navbar a {
+  text-decoration: none;    
+  color: white;             
+  font-weight: 500;
+  margin-left: 30px;
+  transition: 0.2s;
+}
+
+.navbar a:visited {
+  color: white;
+}
+
+.navbar a:hover {
+  color: #d7cb20;
+}
+
+.reason{
+  font-size:12px;
+  color:#d7cb20;
+  margin-top:4px;
+}
+</style>
+
+</head>
+
+<body class="browse-page">
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">🎬 MovieRec</div>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="browse.html">Browse</a>
+    <a href="watchlist.html">Watchlist</a>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="browse-container">
+
+  <h1>Recommended for You</h1>
+  <p id="info">Loading recommendations...</p>
+
+  <p class="showing" id="movieCount"></p>
+
+  <div class="movie-grid" id="movieGrid"></div>
+
+  <p id="emptyMsg" class="empty"></p>
+
+</div>
+
+
+<script>
+
+const API_KEY = "71cdad227e0b3d8a7797836bf5411a75";
+const BASE_URL = "https://api.themoviedb.org/3";
+
+/* 🎯 GENRE MAP (STEP 2) */
+const GENRE_MAP = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  27: "Horror",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Sci-Fi",
+  53: "Thriller"
+};
+
+
+/* ===========================
+   FAKE USER
+=========================== */
+if (!localStorage.getItem("user")) {
+  localStorage.setItem("user", JSON.stringify({
+    email: "demo@gmail.com"
+  }));
+}
+
+
+/* ===========================
+   LOAD RECOMMENDED MOVIES
+=========================== */
+async function loadRecommendedMovies(){
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(!user) return;
+
+  const grid = document.getElementById("movieGrid");
+  const info = document.getElementById("info");
+  const count = document.getElementById("movieCount");
+  const emptyMsg = document.getElementById("emptyMsg");
+
+  try{
+
+    // 🔥 GET GENRES FROM BACKEND
+    const res = await fetch(`http://localhost:3000/api/auth/recommend/${user.email}`);
+    const data = await res.json();
+
+    if(!data.genres || data.genres.length === 0){
+      info.innerText = "No recommendations yet.";
+      emptyMsg.innerText = "Add movies + ratings to your watchlist";
+      return;
+    }
+
+    /* 🎯 CONVERT GENRE IDs → NAMES */
+    let readableGenres = data.genres
+      .map(id => GENRE_MAP[id])
+      .filter(Boolean)
+      .join(", ");
+
+    info.innerText = readableGenres
+      ? `Because you like ${readableGenres} movies 🎯`
+      : "Based on your activity";
+
+    // 🔥 FETCH MOVIES
+    let allMovies = [];
+
+    for(let genre of data.genres){
+
+      const tmdbRes = await fetch(
+        `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genre}&sort_by=popularity.desc`
+      );
+
+      const tmdbData = await tmdbRes.json();
+
+      if(tmdbData.results){
+        allMovies = allMovies.concat(tmdbData.results);
+      }
+    }
+
+    // 🔥 REMOVE DUPLICATES
+    const unique = {};
+    allMovies.forEach(m => {
+      unique[m.id] = m;
+    });
+
+    const finalMovies = Object.values(unique).slice(0, 30);
+
+    grid.innerHTML = "";
+    count.innerText = `Showing ${finalMovies.length} recommended movies`;
+
+    function getReason(movie, userGenres) {
+
+  if(!movie.genre_ids) return "Recommended for you";
+
+  const match = movie.genre_ids.find(g => userGenres.includes(g));
+
+  if(match && GENRE_MAP[match]){
+    return `Because you like ${GENRE_MAP[match]}`;
+  }
+
+  return "Popular in your taste";
+}
+
+    // 🔥 RENDER LIKE BROWSE PAGE
+    finalMovies.forEach(movie => {
+
+      const poster = movie.poster_path
+        ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+        : "https://via.placeholder.com/300x450";
+
+      const year = movie.release_date 
+        ? movie.release_date.split("-")[0] 
+        : "N/A";
+
+      const card = document.createElement("div");
+      card.classList.add("movie-card");
+
+      card.innerHTML = `
+        <div class="movie-wrapper" onclick="openMovie(${movie.id})">
+
+          <img src="${poster}" alt="${movie.title}">
+
+          <button class="watchlist-btn"
+            onclick='event.stopPropagation(); addToWatchlist(${JSON.stringify(movie)})'>
+            +
+          </button>
+
+          
+        <div class="movie-info">
+        <h3>${movie.title}</h3>
+        <p class="year">${year}</p>
+        <p class="rating">⭐ ${movie.vote_average.toFixed(1)}</p>
+        <p class="reason">${getReason(movie, data.genres)}</p>
+        </div>
+
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+  }catch(err){
+    console.error(err);
+    info.innerText = "Error loading recommendations";
+  }
+}
+
+
+/* ===========================
+   OPEN MOVIE
+=========================== */
+function openMovie(id){
+  window.location.href = `movie.html?id=${id}`;
+}
+
+
+/* ===========================
+   ADD TO WATCHLIST
+=========================== */
+async function addToWatchlist(movie){
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(!user){
+    alert("Please login first");
+    return;
+  }
+
+  const ratings = JSON.parse(localStorage.getItem("ratings")) || {};
+  const userRating = ratings[movie.id] || 0;
+
+  const movieData = {
+    movieId: movie.id,
+    title: movie.title,
+    poster: movie.poster_path,
+    rating: movie.vote_average,
+    genres: movie.genre_ids,
+    userRating: userRating
+  };
+
+  try{
+    const res = await fetch("http://localhost:3000/api/auth/watchlist/add",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        email: user.email,
+        movie: movieData
+      })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+  }catch(err){
+    console.error(err);
+  }
+}
+
+
+/* ===========================
+   INIT
+=========================== */
+document.addEventListener("DOMContentLoaded", loadRecommendedMovies);
+
+</script>
+
+</body>
+</html>
